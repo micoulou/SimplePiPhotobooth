@@ -45,7 +45,7 @@ countdown_label.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
 def compose_print_image(photo_path):
     # Ouvre la photo et la convertit en N&B
     base_photo = Image.open(photo_path).convert("L")
-    base_photo = base_photo.resize((384, 400))  # Largeur max de la plupart des imprimantes thermiques
+    base_photo = base_photo.resize((384, 350))  # Largeur max de la plupart des imprimantes thermiques
 
     # Crée une image plus grande pour ajouter cadre + texte
     width, height = 384, 480
@@ -57,12 +57,13 @@ def compose_print_image(photo_path):
 
     # Ajoute texte en haut
     try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/adf/RomandeADFStd-DemiBold.otf", 20)
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
     except:
         font = ImageFont.load_default()
 
     draw.text((width // 2, 10), "Mariage Paula and Heath", fill="black", anchor="mm", font=font)
-    draw.text((width // 2, 35), "15 juin 2025", fill="black", anchor="mm", font=font)
+    draw.text((width // 2, 35), "5 juin 2025", fill="black", anchor="mm", font=font)
     framed.paste(base_photo, (0, 60))
     # Enregistre l’image finale
     framed_path = photo_path.replace(".jpg", "_framed.png")
@@ -125,6 +126,9 @@ def print_photo():
     else:
         print("[⚠️] Aucune photo à imprimer.")
 
+def shutdownRaspberry():
+    os.system("/usr/sbin/shutdown")
+
 # === BOUTONS ===
 # Bouton capture (rond rouge)
 photo_btn = tk.Button(window, text="●", font=("Helvetica", 48), fg="red", bg="black", bd=0, command=take_photo)
@@ -140,5 +144,5 @@ print_btn.place(relx=0.7, rely=0.85, anchor=tk.CENTER)
 update_preview()
 CAPTURE_BUTTON.when_pressed = take_photo
 PRINT_BUTTON.when_pressed = print_photo
+POWEROFF_BUTTON.when_pressed = shutdownRaspberry
 window.mainloop()
-
